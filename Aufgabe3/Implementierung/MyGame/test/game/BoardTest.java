@@ -1,6 +1,5 @@
 package game;
 
-import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.After;
 import org.junit.Before;
