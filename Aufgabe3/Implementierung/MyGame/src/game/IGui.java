@@ -10,11 +10,12 @@ package game;
 public interface IGui {
     /**
      * Feld markieren, im Rahmen von 1-20. Oberstes Feld ist 1, weiter im Uhrzeigersinn
+     *
      * @param fieldnr Feld-ID
      * @param player  Spieler (1, schwarz; 2, weiss)
      * @return true für erfolgreiches markieren, false bei Fehlern (belegtes Feld/Bereich über-/unterschritten)
      */
-    public boolean markField(int fieldnr, int player);
+    public boolean setField(int fieldnr, int player) throws OffBoardException;
 
     /**
      * Gibt Belegung auf Feld fieldnr zurück
@@ -22,4 +23,17 @@ public interface IGui {
      * @return Belegung: 0 - Unbelegt, grau; 1 - Spieler 1, schwarz; 2 - Spieler 2, weiss
      */
     public int getField(int fieldnr);
+
+    class OffBoardException extends Exception {
+        private String message;
+
+        OffBoardException(String m){
+            this.message = m;
+        }
+
+        @Override
+        public String getMessage() {
+            return message;
+        }
+    }
 }
