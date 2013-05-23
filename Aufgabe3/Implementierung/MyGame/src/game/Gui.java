@@ -2,6 +2,8 @@ package game;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -36,8 +38,10 @@ public class Gui implements IGui{
     private JButton button20;
     private ArrayList<JButton> buttons = new ArrayList<JButton>();
     private HashMap<JButton,Integer> fields = new HashMap<JButton, Integer>();
+    private Board b;
 
-    public Gui(){
+    public Gui(Board b){
+        this.b = b;
         buttons.add(button1);
         buttons.add(button2);
         buttons.add(button3);
@@ -78,10 +82,159 @@ public class Gui implements IGui{
         fields.put(button18,0);
         fields.put(button19,0);
         fields.put(button20,0);
+
+        // Buttons zum Funktionieren bringen ;)
+        button1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                markField(1,1);
+            }
+        });
+        button2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                markField(2,1);
+            }
+        });
+        button3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                markField(3,1);
+            }
+        });
+        button4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                markField(4,1);
+            }
+        });
+        button5.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                markField(5,1);
+            }
+        });
+        button6.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                markField(6,1);
+            }
+        });
+        button7.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                markField(7,1);
+            }
+        });
+        button8.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                markField(8,1);
+            }
+        });
+        button9.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                markField(9,1);
+            }
+        });
+        button10.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                markField(10,1);
+            }
+        });
+        button11.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                markField(11,1);
+            }
+        });
+        button12.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                markField(12,1);
+            }
+        });
+        button13.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                markField(13,1);
+            }
+        });
+        button14.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                markField(14,1);
+            }
+        });
+        button15.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                markField(15,1);
+            }
+        });
+        button16.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                markField(16,1);
+            }
+        });
+        button17.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                markField(17,1);
+            }
+        });
+        button18.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                markField(18,1);
+            }
+        });
+        button19.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                markField(19,1);
+            }
+        });
+        button1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                markField(1,1);
+            }
+        });
+        button20.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                markField(20,1);
+            }
+        });
     }
 
     public boolean markField(int fieldnr, int player){
+        try{
+            if(b.isMarkedAtPosition(fieldnr-1)){
+                JOptionPane.showMessageDialog(null,"Feld "+fieldnr+" ist bereits belegt!");
+                return false;
+            } else {
+                return setField(fieldnr,player);
+                // TODO: (Einfaches) Markieren eines Feldes in 'Board'
+            }
+        } catch(Error e) {
+            JOptionPane.showMessageDialog(null,e.getMessage());
+            return false;
+        } catch (OffBoardException o) {
+            JOptionPane.showMessageDialog(null, o.getMessage());
+            return false;
+        }
+    }
+
+    public boolean setField(int fieldnr, int player) throws OffBoardException{
         JButton button = buttons.get(fieldnr-1);
+        if(fieldnr > 20 || fieldnr < 1){
+            throw new OffBoardException("Das Spielfeld geht von 1 bis 20 (Gewählter Wert: "+fieldnr+")");
+        }
         if (((player == 1) || (player == 2)))
             if (fields.get(button) == 0) {
                 if (player == 1) {
