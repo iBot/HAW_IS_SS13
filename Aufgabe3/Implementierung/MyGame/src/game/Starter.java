@@ -13,17 +13,16 @@ import java.util.List;
 public class Starter {
 
      public static void main(String[] args){
-        List<Mark> spielfeld = new ArrayList<>();
-        spielfeld.add(new Mark(new Player("Bla")));
-        spielfeld.add(null);
-        spielfeld.add(null);
-        spielfeld.add(null);
-        spielfeld.add(null);
-        spielfeld.add(null);
-        spielfeld.add(null);
-        spielfeld.add(null);
-        spielfeld.add(null);
-        spielfeld.add(null);
-        new AlphaBeta(5, spielfeld);
+//        Board board = new Board(5);
+//         board.setMarkAtPosition((new Mark(new Player("Bla",true))), 0);
+//        AlphaBeta abSuche= new AlphaBeta(3, board.getCircle());
+//
+//
+//         int move = abSuche.getNextMove();
+//
+//         System.out.println(move);
+
+         IGui gui = new Gui(new Board(20),new Player("Human",true),new Player("Computer",false));
+
     }
 }

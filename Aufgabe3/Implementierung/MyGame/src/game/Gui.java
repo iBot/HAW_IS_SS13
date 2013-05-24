@@ -39,9 +39,18 @@ public class Gui implements IGui{
     private ArrayList<JButton> buttons = new ArrayList<JButton>();
     private HashMap<JButton,Integer> fields = new HashMap<JButton, Integer>();
     private Board b;
+    private Player human,computer;
 
-    public Gui(Board b){
+    public Gui(Board b, Player human, Player computer){
         this.b = b;
+        if (computer.isHuman()){
+            throw new Error("Computer-Player "+computer+" is a human player!");
+        }
+        if (!human.isHuman()){
+            throw new Error("Human-Player "+human+" is not a human player!");
+        }
+        this.computer = computer;
+        this.human = human;
         buttons.add(button1);
         buttons.add(button2);
         buttons.add(button3);
@@ -218,6 +227,7 @@ public class Gui implements IGui{
                 JOptionPane.showMessageDialog(null,"Feld "+fieldnr+" ist bereits belegt!");
                 return false;
             } else {
+//                b.setMarkAtPosition(,1)
                 return setField(fieldnr,player);
                 // TODO: (Einfaches) Markieren eines Feldes in 'Board'
             }
