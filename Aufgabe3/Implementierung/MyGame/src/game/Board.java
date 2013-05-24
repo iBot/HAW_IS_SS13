@@ -1,5 +1,7 @@
 package game;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.List;
 
 /**
@@ -11,15 +13,16 @@ import java.util.List;
  */
 public final class Board {
 
-    private Mark[] circle;
+    private Circle circle;
     private Player looser;
 
     public Board(int size){
+
         if (size<=0){
             throw new Error(String.format("Size must be greater than 0 but it is %d", size));
         }
 
-        this.circle = new Mark[size];
+        this.circle = new Circle(size);
     }
 
     public Player getLooser(){
@@ -33,7 +36,7 @@ public final class Board {
     public boolean isMarkedAtPosition(final int position){
         boolean result = false;
         if (isInRange(position)){
-            if (this.circle[position] != null){
+            if (this.circle.get(position) != null){
                 result = true;
             }
         } else {
@@ -45,19 +48,19 @@ public final class Board {
     public Mark getMarkAtPosition(final int position){
         Mark result = null;
         if (isInRange(position)){
-            result = this.circle[position];
+            result = this.circle.get(position);
         }
         return result;
     }
 
     public int getSize(){
-        return this.circle.length;
+        return this.circle.size();
     }
 
     public boolean setMarkAtPosition(final Mark mark, final int position){
         boolean result = false;
         if (!isMarkedAtPosition(position) && !isGameFinished()){
-            this.circle[position] = mark;
+            this.circle.set(mark, position);
             result = true;
 
             if ((getPrev(position) != null) || (getNext(position) != null)){
@@ -69,7 +72,7 @@ public final class Board {
 
     public boolean isInRange(final int index){
         boolean result = false;
-        if ((index >= 0) && (index < circle.length)){
+        if ((index >= 0) && (index < circle.size())){
             result = true;
         }
         return result;
@@ -80,9 +83,9 @@ public final class Board {
         if (isInRange(position)){
 
             if (position == 0){
-                result = circle[circle.length-1];
+                result = circle.get(circle.size()-1);
             } else {
-                result = circle[position-1];
+                result = circle.get(position-1);
             }
 
         } else {
@@ -95,10 +98,10 @@ public final class Board {
         Mark result = null;
         if (isInRange(position)){
 
-            if (position == circle.length-1){
-                result = circle[0];
+            if (position == circle.size()-1){
+                result = circle.get(0);
             } else {
-                result = circle[position+1];
+                result = circle.get(position+1);
             }
 
         } else {
@@ -108,7 +111,7 @@ public final class Board {
     }
 
     private void throwPositionOutOfBound(final int position){
-        throw new Error(String.format("Position out of Bound. Expectation: between 0 and %d; Actual: %d", this.circle.length - 1, position));
+        throw new Error(String.format("Position out of Bound. Expectation: between 0 and %d; Actual: %d", this.circle.size() - 1, position));
     }
 
     @Override
@@ -116,10 +119,14 @@ public final class Board {
         final String nlt = "\n\t";
         final String dp = ":\t";
         StringBuilder sb = new StringBuilder("Board:");
-        for (int i = 0; i< circle.length; i++){
-            sb.append(nlt).append(i).append(dp).append(circle[i]);
+        for (int i = 0; i< circle.size(); i++){
+            sb.append(nlt).append(i).append(dp).append(circle.get(i));
         }
         return sb.toString();
+    }
+
+    public Circle getCircle(){
+        return circle.copy();
     }
 
 }

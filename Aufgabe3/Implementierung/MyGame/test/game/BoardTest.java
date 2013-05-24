@@ -18,8 +18,8 @@ public class BoardTest {
 
     @Before
     public void setUp() throws Exception {
-        p1 = new Player("P1");
-        p2 = new Player("P2");
+        p1 = new Player("P1",true);
+        p2 = new Player("P2",false);
         m1 = new Mark(p1);
         m2 = new Mark(p2);
     }

@@ -42,10 +42,23 @@ public class CircleTest {
 
     @Test
     public void testSet() throws Exception {
-        circle.set(new Mark(new Player("player")),4);
-        assertNotNull(circle.get(14));
-        circle.set(new Mark(new Player("player")),11);
+
+        Mark m1 = new Mark(new Player("player",true));
+        Mark m2 = new Mark(new Player("player",true));
+        Mark m3 = new Mark(new Player("player",true));
+        circle.set(m1,4);
+        assertNotNull(circle.get(4));
+        circle.set(m2,1);
         assertNotNull(circle.get(1));
+        Mark m2next = circle.getNext(0);
+        assertSame("Same Object: ",m2,m2next);
+        Mark m2prev = circle.getPrev(2);
+        assertSame("Same Object: ",m2,m2next);
+        circle.set(m3,9);
+        Mark m3next = circle.getNext(9);
+        assertNull(m3next);
+        Mark m3prev = circle.getPrev(0);
+        assertSame("Same Object: ",m3,m3prev);
     }
 
     @Test
