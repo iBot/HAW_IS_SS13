@@ -1,8 +1,5 @@
 package game;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created with IntelliJ IDEA.
  * User: tobi
@@ -12,7 +9,7 @@ import java.util.List;
  */
 public class Starter {
 
-     public static void main(String[] args){
+    public static void main(String[] args) {
 //        Board board = new Board(5);
 //         board.setMarkAtPosition((new Mark(new Player("Bla",true))), 0);
 //        AlphaBeta abSuche= new AlphaBeta(3, board.getCircle());
@@ -21,8 +18,10 @@ public class Starter {
 //         int move = abSuche.getNextMove();
 //
 //         System.out.println(move);
-
-         IGui gui = new Gui(new Board(20),new Player("Human",true),new Player("Computer",false));
+        Board board = new Board(20);
+        Player human = new Player("Human", true);
+        Player computer = new Player("Computer", false);
+        IGui gui = new Gui(board, human, computer);
 
     }
 }

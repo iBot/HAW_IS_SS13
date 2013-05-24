@@ -24,6 +24,13 @@ public interface IGui {
      */
     public int getField(int fieldnr);
 
+    /**
+     * Um informiert zu werden, sobald ein menschlicher Spieler einen Spielzug beendet, muss man sich für das Event einschreiben.
+     *
+     * @param playerMovedListener Listener
+     */
+    public void subscribeForPlayerMovedEvet(PlayerMovedListener playerMovedListener);
+
     class OffBoardException extends Exception {
         private String message;
 
