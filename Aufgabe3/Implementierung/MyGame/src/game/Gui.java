@@ -35,7 +35,7 @@ public class Gui implements IGui {
     private JButton button17;
     private JButton button18;
     private JButton button19;
-    private JButton button20;
+    private JButton button0;
     private ArrayList<JButton> buttons = new ArrayList<JButton>();
     private HashMap<JButton, Integer> fields = new HashMap<JButton, Integer>();
     private java.util.List<PlayerMovedListener> listenerList;
@@ -55,6 +55,8 @@ public class Gui implements IGui {
 
         listenerList = new ArrayList<>();
 
+
+        buttons.add(button0);
         buttons.add(button1);
         buttons.add(button2);
         buttons.add(button3);
@@ -74,8 +76,9 @@ public class Gui implements IGui {
         buttons.add(button17);
         buttons.add(button18);
         buttons.add(button19);
-        buttons.add(button20);
 
+
+        fields.put(button0, 0);
         fields.put(button1, 0);
         fields.put(button2, 0);
         fields.put(button3, 0);
@@ -94,7 +97,6 @@ public class Gui implements IGui {
         fields.put(button17, 0);
         fields.put(button18, 0);
         fields.put(button19, 0);
-        fields.put(button20, 0);
 
         // Buttons zum Funktionieren bringen ;)
         button1.addActionListener(new ActionListener() {
@@ -217,30 +219,52 @@ public class Gui implements IGui {
                 markField(1, 1);
             }
         });
-        button20.addActionListener(new ActionListener() {
+        button0.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                markField(20, 1);
+                markField(0, 1);
             }
         });
     }
 
+//    public Gui(){
+//
+//    }
+
+    public static void main(String[] args) {
+
+        Board board = new Board(20);
+        Player human = new Player("Human", true);
+        Player computer = new Player("Computer", false);
+        Gui gui = new Gui(board, human, computer);
+        new AI(board, gui, computer);
+
+        JFrame frame = new JFrame("Gui");
+        frame.setContentPane(gui.panel1);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
+    }
+
     public boolean markField(int fieldnr, int player) {
         try {
-            if (b.isMarkedAtPosition(fieldnr - 1)) {
+            if (b.isMarkedAtPosition(fieldnr)) {
                 JOptionPane.showMessageDialog(null, "Feld " + fieldnr + " ist bereits belegt!");
                 return false;
             } else {
                 b.setMarkAtPosition(new Mark(human), fieldnr);
                 boolean returnValue = setField(fieldnr, player);
-                for (PlayerMovedListener pml : listenerList){
-                    final PlayerMovedListener currentPML = pml;
-                    new Runnable(){
-                        @Override
-                        public void run() {
-                            currentPML.computerMove();
-                        }
-                    };
+                if (player == 1) {
+                    for (PlayerMovedListener pml : listenerList) {
+                        final PlayerMovedListener currentPML = pml;
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                currentPML.computerMove();
+                            }
+                        }.run();
+
+                    }
                 }
                 return returnValue;
                 // TODO: (Einfaches) Markieren eines Feldes in 'Board'
@@ -255,9 +279,10 @@ public class Gui implements IGui {
     }
 
     public boolean setField(int fieldnr, int player) throws OffBoardException {
-        JButton button = buttons.get(fieldnr - 1);
-        if (fieldnr > 20 || fieldnr < 1) {
-            throw new OffBoardException("Das Spielfeld geht von 1 bis 20 (Gewählter Wert: " + fieldnr + ")");
+        System.out.printf("Spieler %d markiert Feld %d%n", player, fieldnr);
+        JButton button = buttons.get(fieldnr);
+        if (fieldnr > 19 || fieldnr < 0) {
+            throw new OffBoardException("Das Spielfeld geht von 0 bis 19 (Gewählter Wert: " + fieldnr + ")");
         }
         if (((player == 1) || (player == 2)))
             if (fields.get(button) == 0) {
@@ -267,7 +292,8 @@ public class Gui implements IGui {
                     button.setText("X");
                     fields.put(button, 1);
                 } else {
-                    button.setBackground(Color.WHITE);
+                    button.setBackground(Color.BLUE);
+                    button.setForeground(Color.WHITE);
                     button.setText("O");
                     fields.put(button, 2);
                 }
@@ -282,7 +308,7 @@ public class Gui implements IGui {
 
     @Override
     public int getField(int fieldnr) {
-        return fields.put(buttons.get(fieldnr - 1), 1);  //To change body of implemented methods use File | Settings | File Templates.
+        return fields.put(buttons.get(fieldnr), 1);  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override

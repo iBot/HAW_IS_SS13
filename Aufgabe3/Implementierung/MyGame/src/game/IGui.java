@@ -1,5 +1,7 @@
 package game;
 
+import javax.swing.*;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Alexander

@@ -8,21 +8,27 @@ package game;
  * To change this template use File | Settings | File Templates.
  */
 public class AI  implements PlayerMovedListener{
-    private final IGui gui;
+    private final Gui gui;
     private final Board board;
     private final Player player;
 
     @Override
     public void computerMove() {
+        System.out.println("Computer ist am Zug. Board: "+board.getCircle());
         AlphaBeta alphaBetaSearch = new AlphaBeta(10,board.getCircle().copy());
-        try {
-            gui.setField(alphaBetaSearch.getNextMove(),2);
-        } catch (IGui.OffBoardException e) {
-            throw new Error("Programmer did something wrong!!!!",e);
+
+        if (!board.isGameFinished()){
+//            try {
+                int nextMove = alphaBetaSearch.getNextMove();
+            System.out.printf(" Computer wählt Feld %d%n", nextMove);
+                gui.markField(nextMove,2);
+//            } catch (IGui.OffBoardException e) {
+//                throw new Error("Programmer did something wrong!!!!",e);
+//            }
         }
     }
 
-    public AI(Board board, IGui gui, Player player ){
+    public AI(Board board, Gui gui, Player player ){
         this.board = board;
         this.player = player;
         this.gui = gui;

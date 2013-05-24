@@ -1,5 +1,7 @@
 package game;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.List;
 
 /**
@@ -15,6 +17,7 @@ public final class Board {
     private Player looser;
 
     public Board(int size){
+
         if (size<=0){
             throw new Error(String.format("Size must be greater than 0 but it is %d", size));
         }

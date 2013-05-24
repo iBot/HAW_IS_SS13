@@ -11,7 +11,7 @@ import java.util.*;
  */
 public class AlphaBeta {
     
-    private static boolean TRACE = true;
+    private static boolean TRACE = false;
 
     private final int startDepth;
 //    private final List<Mark> ausganssituation;
