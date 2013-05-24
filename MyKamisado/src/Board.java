@@ -29,6 +29,7 @@ public class Board extends JPanel{
     private GuiRunner gr;
 
     public Board(GuiRunner gr) {
+        this.setSize(500, 500);
         this.gr = gr;
         addListener();
         gr.setBoard(this);
@@ -44,6 +45,7 @@ public class Board extends JPanel{
     }
 
     private void clicked(MouseEvent e) {
+        // Die Wurzel des Koordinatenkreuzes ist oben links
         int x = e.getX();
         int y = e.getY();
         if (x > boardX & x < boardX + boardLen & y > boardY
@@ -51,6 +53,7 @@ public class Board extends JPanel{
 
             x = (x - boardX) / fieldLen;
             y = (y - boardY) / fieldLen;
+            //System.out.println("Zugriff auf x: "+x+" y:"+y+" Pos: x:"+e.getX()+" y:"+e.getY());
 
             gr.clicked(x, y);
         }
@@ -75,14 +78,17 @@ public class Board extends JPanel{
         boardX = (maxX - boardLen) / 2;
         boardY = pad;
 
-        drawCoords();
+        //drawCoords();
 
         drawFields();
 
         if (moveVisible)
             drawMove();
 
-        drawTargets();
+        if(!targets.isEmpty()){
+            System.out.println(targets.toString());
+            drawTargets();
+        }
 
         /*synchronized (ratings) {
             drawRatings();
@@ -247,6 +253,8 @@ public class Board extends JPanel{
     }*/
 
     private void drawTargets() {
+        if(targets.isEmpty())
+            return;
 
         int w = fieldLen / targetArcScale;
 
@@ -276,6 +284,7 @@ public class Board extends JPanel{
 
     public void setTargets(ArrayList<Field> tar) {
         targets = tar;
+        this.repaint();
     }
 
     public synchronized void updateRatings(ArrayList<Field> ratings) {

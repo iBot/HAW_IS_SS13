@@ -6,9 +6,13 @@
  * To change this template use File | Settings | File Templates.
  */
 public abstract class Player implements Runnable{
-    private KColor color;
+    protected KColor color;
 
     public KColor getColor(){
         return color;
     }
+
+    public abstract Field nextMove();
+
+    public abstract void move(Field f);
 }

@@ -7,10 +7,35 @@
  */
 public class Field {
     private int x,y;
+    private KColor c;
+    private Figure f = null;
 
-    public Field(int x, int y) {
+    @Override
+    public String toString() {
+        return "Field{" +
+                "x=" + x +
+                ", y=" + y +
+                ", c=" + c +
+                ", f=" + f +
+                '}';
+    }
+
+    public Field(KColor c, int x, int y) {
         this.x = x;
         this.y = y;
+        this.c = c;
+    }
+
+    public Figure getFigure(){
+        return f;
+    }
+
+    public void setFigure(Figure f){
+        this.f = f;
+    }
+
+    public KColor getColor(){
+        return c;
     }
 
     public int getX() {

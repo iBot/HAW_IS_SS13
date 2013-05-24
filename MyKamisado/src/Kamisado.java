@@ -12,9 +12,16 @@ public class Kamisado implements Runnable{
     private static KColor[][] COLOR_PATTERN;
     public static Rules rules;
     public static Kamisado kamisado;
+    private Thread kGame;
     public static GuiRunner gr;
     private Player playerB, playerW;
     private boolean stopGame = false;
+    private Board b;
+    private Frame frame;
+
+    //Spielerfarben
+    private KColor white = new KColor(Color.WHITE, "White", 1);
+    private KColor black = new KColor(Color.BLACK, "Black", 2);
 
     /**
      * Festlegung des Farbmusters inklusive Erzeugung der entsprechende
@@ -55,10 +62,15 @@ public class Kamisado implements Runnable{
     }
 
     public Kamisado() {
-        playerW = new Human();
-        playerB = new Computer();
+        playerW = new Human(white);
+        playerB = new Computer(black);
         rules = new Rules(playerW, playerB);
         gr = new GuiRunner(this, rules);
+        b = new Board(gr);
+        gr.start();
+        rules.setGuiRunner(gr);
+        kGame = new Thread(this);
+        kGame.start();
     }
 
     @Override
@@ -69,15 +81,24 @@ public class Kamisado implements Runnable{
             JOptionPane.showMessageDialog(null,"Fehler beim Warten auf GUI!");
         }
 
-        rules.setGuiRunner(gr);
+        /*while(!stopGame && !rules.isGameOver()){
 
-        while(!stopGame && !rules.isGameOver()){
-
+        }*/
+        while(!rules.isGameOver() && !stopGame){
+            if(rules.isMarked()){
+                gr.showPossibleTargets();
+                b.repaint();
+            }
+            Player p = rules.getTurn();
+            Field f = p.nextMove();
+            rules.setMove(f);
+            b.repaint();
+            gr.hideTargets();
         }
     }
 
-    public static Color getFieldColor(int posY, int posX) {
-        return null;  //To change body of created methods use File | Settings | File Templates.
+    public static KColor getFieldColor(int posY, int posX) {
+        return COLOR_PATTERN[posX][posY];
     }
 
     public static String getFieldTextX(int i) {
