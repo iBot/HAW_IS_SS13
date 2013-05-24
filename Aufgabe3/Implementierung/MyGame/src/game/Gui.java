@@ -92,6 +92,7 @@ public class Gui implements IGui {
         fields.put(button11, 0);
         fields.put(button12, 0);
         fields.put(button13, 0);
+        fields.put(button14, 0);
         fields.put(button15, 0);
         fields.put(button16, 0);
         fields.put(button17, 0);
@@ -213,12 +214,6 @@ public class Gui implements IGui {
                 markField(19, 1);
             }
         });
-        button1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                markField(1, 1);
-            }
-        });
         button0.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -247,26 +242,37 @@ public class Gui implements IGui {
     }
 
     public boolean markField(int fieldnr, int player) {
+        boolean result;
         try {
             if (b.isMarkedAtPosition(fieldnr)) {
-                JOptionPane.showMessageDialog(null, "Feld " + fieldnr + " ist bereits belegt!");
-                return false;
+                System.out.println(b.getCircle());
+                JOptionPane.showMessageDialog(null, "Spieler "+player+" Feld " + fieldnr + " ist bereits belegt!");
+                result = false;
             } else {
                 b.setMarkAtPosition(new Mark(human), fieldnr);
+                buttons.get(fieldnr).setEnabled(false);
                 boolean returnValue = setField(fieldnr, player);
+                Runnable computerMove = null;
                 if (player == 1) {
                     for (PlayerMovedListener pml : listenerList) {
                         final PlayerMovedListener currentPML = pml;
-                        new Runnable() {
+                        computerMove = new Runnable() {
                             @Override
                             public void run() {
                                 currentPML.computerMove();
                             }
-                        }.run();
-
+                        };
                     }
                 }
-                return returnValue;
+                if (b.isGameFinished()) {
+                    for (JButton button : buttons) {
+                        button.setEnabled(false);
+                    }
+                    JOptionPane.showMessageDialog(null, "Spiel ist vorbei!");
+                } else {
+                    if (computerMove!=null) computerMove.run();
+                }
+                result = returnValue;
                 // TODO: (Einfaches) Markieren eines Feldes in 'Board'
             }
         } catch (Error e) {
@@ -276,9 +282,10 @@ public class Gui implements IGui {
             JOptionPane.showMessageDialog(null, o.getMessage());
             return false;
         }
+        return result;
     }
 
-    public boolean setField(int fieldnr, int player) throws OffBoardException {
+    private boolean setField(int fieldnr, int player) throws OffBoardException {
         System.out.printf("Spieler %d markiert Feld %d%n", player, fieldnr);
         JButton button = buttons.get(fieldnr);
         if (fieldnr > 19 || fieldnr < 0) {
@@ -306,7 +313,6 @@ public class Gui implements IGui {
         }
     }
 
-    @Override
     public int getField(int fieldnr) {
         return fields.put(buttons.get(fieldnr), 1);  //To change body of implemented methods use File | Settings | File Templates.
     }

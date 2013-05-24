@@ -15,7 +15,7 @@ public class AI  implements PlayerMovedListener{
     @Override
     public void computerMove() {
         System.out.println("Computer ist am Zug. Board: "+board.getCircle());
-        AlphaBeta alphaBetaSearch = new AlphaBeta(10,board.getCircle().copy());
+        AlphaBeta alphaBetaSearch = new AlphaBeta(15,board.getCircle().copy());
 
         if (!board.isGameFinished()){
 //            try {
