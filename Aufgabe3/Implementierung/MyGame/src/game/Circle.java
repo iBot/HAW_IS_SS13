@@ -17,8 +17,8 @@ public class Circle {
         this.circle = new Mark[size];
     }
 
-    private Circle(Mark[] circle){
-        this.circle = Arrays.copyOf(circle,circle.length);
+    private Circle(Mark[] circle) {
+        this.circle = Arrays.copyOf(circle, circle.length);
     }
 
     public Mark get(int i) {
@@ -27,12 +27,12 @@ public class Circle {
     }
 
     public Mark getPrev(int i) {
-        int index = (i==0)?size()-1:i-1;
+        int index = (i == 0) ? size() - 1 : i - 1;
         return circle[index];
     }
 
     public Mark getNext(int i) {
-        int index = (i==size()-1)?0:i+1;
+        int index = (i == size() - 1) ? 0 : i + 1;
         return circle[index];
     }
 
@@ -44,7 +44,7 @@ public class Circle {
         return circle.length;
     }
 
-    public List<Mark> asList(){
+    public List<Mark> asList() {
         return new ArrayList<>(Arrays.asList(circle));
     }
 
@@ -53,17 +53,43 @@ public class Circle {
         return String.format("Circle{%s}", Arrays.toString(circle));
     }
 
-    public Circle copy(){
+    public Circle copy() {
         return new Circle(circle);
     }
 
-    public Map<Integer,Integer> getFreePositions(){
-        Map<Integer,Integer> freePositions = new HashMap();
-        for (int i = 0; i < circle.length; i++){
-            if (circle[i] == null){
-                freePositions.put(i,0);
+    public List<Integer> getFreePositions() {
+        List<Integer> freePositions = new ArrayList<>();
+        for (int i = 0; i < circle.length; i++) {
+            if (circle[i] == null) {
+                freePositions.add(i);
             }
         }
+        Collections.shuffle(freePositions);
+        return freePositions;
+    }
+
+    public List<Integer> getUniqueFreePositions() {
+        List<Integer> freePositions = new ArrayList<>();
+//        List<Mark> original = Arrays.asList(circle);
+//        List<Mark> reverse = new ArrayList<>(original);
+//        Collections.reverse(reverse);
+
+        boolean allNull = true;
+        for (int i = 0; i < circle.length; i++) {
+            if (circle[i] == null) {
+                freePositions.add(i);
+            } else {
+                allNull = false;
+            }
+        }
+
+        if (allNull){
+            freePositions = new LinkedList<>();
+            freePositions.add(0);
+        }
+
+
+        Collections.shuffle(freePositions);
         return freePositions;
     }
 }

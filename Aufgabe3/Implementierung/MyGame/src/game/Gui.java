@@ -38,7 +38,7 @@ public class Gui implements IGui {
     private JButton button0;
     private ArrayList<JButton> buttons = new ArrayList<JButton>();
     private HashMap<JButton, Integer> fields = new HashMap<JButton, Integer>();
-    private java.util.List<PlayerMovedListener> listenerList;
+    private PlayerMovedListener computerNextTurn;
     private Board b;
     private Player human, computer;
 
@@ -52,9 +52,6 @@ public class Gui implements IGui {
         }
         this.computer = computer;
         this.human = human;
-
-        listenerList = new ArrayList<>();
-
 
         buttons.add(button0);
         buttons.add(button1);
@@ -234,11 +231,21 @@ public class Gui implements IGui {
         Gui gui = new Gui(board, human, computer);
         new AI(board, gui, computer);
 
+        gui.playerMovedEvent().run();
         JFrame frame = new JFrame("Gui");
         frame.setContentPane(gui.panel1);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+    }
+
+    private Runnable playerMovedEvent(){
+        return new Runnable() {
+            @Override
+            public void run() {
+                computerNextTurn.computerMove();
+            }
+        };
     }
 
     public boolean markField(int fieldnr, int player) {
@@ -249,26 +256,19 @@ public class Gui implements IGui {
                 JOptionPane.showMessageDialog(null, "Spieler "+player+" Feld " + fieldnr + " ist bereits belegt!");
                 result = false;
             } else {
-                b.setMarkAtPosition(new Mark(human), fieldnr);
+                if (player == 1) b.setMarkAtPosition(new Mark(human), fieldnr);
+                else b.setMarkAtPosition(new Mark(computer), fieldnr);
                 buttons.get(fieldnr).setEnabled(false);
                 boolean returnValue = setField(fieldnr, player);
                 Runnable computerMove = null;
                 if (player == 1) {
-                    for (PlayerMovedListener pml : listenerList) {
-                        final PlayerMovedListener currentPML = pml;
-                        computerMove = new Runnable() {
-                            @Override
-                            public void run() {
-                                currentPML.computerMove();
-                            }
-                        };
-                    }
+                    computerMove = playerMovedEvent();
                 }
                 if (b.isGameFinished()) {
                     for (JButton button : buttons) {
                         button.setEnabled(false);
                     }
-                    JOptionPane.showMessageDialog(null, "Spiel ist vorbei!");
+                    JOptionPane.showMessageDialog(null, "Spiel ist vorbei! "+ ((player==1)?"Mensch-":"Computer-")+"Spieler gewinnt." );
                 } else {
                     if (computerMove!=null) computerMove.run();
                 }
@@ -319,8 +319,6 @@ public class Gui implements IGui {
 
     @Override
     public void subscribeForPlayerMovedEvet(PlayerMovedListener playerMovedListener) {
-        if (!listenerList.contains(playerMovedListener)) {
-            listenerList.add(playerMovedListener);
-        }
+        computerNextTurn = playerMovedListener;
     }
 }

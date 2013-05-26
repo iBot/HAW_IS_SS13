@@ -2,7 +2,7 @@ package game;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Map;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -32,18 +32,18 @@ public class AlphaBeta {
         if (TRACE) System.out.printf("MIN: alpha %d beta %d circle %s%n", alpha, beta, circle);
 
         //Mögliche Spielzüge
-        Map<Integer, Integer> possibleMoves = circle.getFreePositions();
+        List<Integer> possibleMoves = circle.getUniqueFreePositions();
 
         int minValue = beta;
         if (depth != 0) {
             if (TRACE) System.out.printf("MIN: depth %d%n", depth);
-            if (TRACE) System.out.printf("MIN: PossibleMoves %s%n", possibleMoves.entrySet());
+            if (TRACE) System.out.printf("MIN: PossibleMoves %s%n", possibleMoves);
 
             //Über alle Spielzüge iterrieren
-            for (Map.Entry<Integer, Integer> currentMove : possibleMoves.entrySet()) {
+            for (int currentMove : possibleMoves) {
                 Circle currentCircle = circle.copy();
 
-                int positionForCurrrentMove = currentMove.getKey();
+                int positionForCurrrentMove = currentMove;
                 if (TRACE) System.out.printf("MIN: currentMove %d%n", positionForCurrrentMove);
                 currentCircle.set(dummy, positionForCurrrentMove);
                 if (TRACE) System.out.printf(" MIN: currentCircle %s%n", currentCircle);
@@ -53,10 +53,8 @@ public class AlphaBeta {
                     if (TRACE)
                         System.out.println("---------" + currentCircle.getPrev(positionForCurrrentMove) + " || " + currentCircle.getNext(positionForCurrrentMove));
                     if (TRACE) System.out.println(" MIN: currentMove -> loose");
-                    currentMove.setValue(Integer.MAX_VALUE);
                 } else {
                     int newValue = max(depth - 1, alpha, getMinValue(possibleMoves), currentCircle);
-                    currentMove.setValue(newValue);
                     if (newValue < minValue) {
                         if (TRACE || TRACEX) System.out.println("MIN: minvalue changed");
                         minValue = newValue;
@@ -65,7 +63,7 @@ public class AlphaBeta {
 //                            break;
 //                        }
                         if (startDepth == depth) {
-                            nextMove = currentMove.getKey();
+                            nextMove = currentMove;
                         }
                     }
                 }
@@ -75,9 +73,9 @@ public class AlphaBeta {
             if (TRACE) System.out.printf("MIN: depth %d%n", depth);
 
             int heuristik = 0;
-            for (Map.Entry<Integer, Integer> currentMove : possibleMoves.entrySet()) {
+            for (int currentMove : possibleMoves) {
                 Circle currentCircle = circle.copy();
-                int positionForCurrrentMove = currentMove.getKey();
+                int positionForCurrrentMove = currentMove;
                 if ((currentCircle.getPrev(positionForCurrrentMove) != null) && (currentCircle.getNext(positionForCurrrentMove) != null)) {
                     heuristik--;
                     if (heuristik < minValue) {
@@ -89,17 +87,17 @@ public class AlphaBeta {
 //                            break;
 //                        }
                         if (startDepth == depth) {
-                            nextMove = currentMove.getKey();
+                            nextMove = currentMove;
                         }
                     }
                 }
             }
-            if (nextMove == -1) {
-                nextMove = new ArrayList<>(circle.getFreePositions().keySet()).get(0);
-            }
+
 
         }
-
+        if (nextMove == -1) {
+            nextMove = new ArrayList<>(circle.getFreePositions()).get(0);
+        }
         if (TRACE || TRACEX) System.out.printf("MIN: minValueToReturn = %d%n", minValue);
         return minValue;
     }
@@ -108,17 +106,17 @@ public class AlphaBeta {
 
         if (TRACE) System.out.printf("MAX: alpha %d beta %d circle %s%n", alpha, beta, circle);
         //Mögliche Spielzüge
-        Map<Integer, Integer> possibleMoves = circle.getFreePositions();
+        List<Integer> possibleMoves = circle.getUniqueFreePositions();
 
         int maxValue = alpha;
         if (depth != 0) {
             if (TRACE) System.out.printf("MAX: depth %d%n", depth);
-            if (TRACE) System.out.printf("MAX: PossibleMoves %s%n", possibleMoves.entrySet());
+            if (TRACE) System.out.printf("MAX: PossibleMoves %s%n", possibleMoves);
 
             //Über alle Spielzüge iterrieren
-            for (Map.Entry<Integer, Integer> currentMove : possibleMoves.entrySet()) {
+            for (int currentMove : possibleMoves) {
                 Circle currentCircle = circle.copy();
-                int positionForCurrrentMove = currentMove.getKey();
+                int positionForCurrrentMove = currentMove;
                 if (TRACE) System.out.printf("MAX: currentMove %d%n", positionForCurrrentMove);
                 currentCircle.set(dummy, positionForCurrrentMove);
                 if (TRACE) System.out.printf(" MAX: currentCircle %s%n", currentCircle);
@@ -127,10 +125,8 @@ public class AlphaBeta {
                     if (TRACE)
                         System.out.println("---------" + currentCircle.getPrev(positionForCurrrentMove) + " || " + currentCircle.getNext(positionForCurrrentMove));
                     if (TRACE) System.out.println(" MAX: currentMove -> loose");
-                    currentMove.setValue(Integer.MIN_VALUE);
                 } else {
                     int newValue = min(depth - 1, getMaxValue(possibleMoves), beta, currentCircle);
-                    currentMove.setValue(newValue);
                     if (newValue > maxValue) {
 
                         if (TRACE || TRACEX) System.out.println("MAX: maxvalue changed");
@@ -140,21 +136,19 @@ public class AlphaBeta {
 //                            break;
 //                        }
                         if (startDepth == depth) {
-                            nextMove = currentMove.getKey();
+                            nextMove = currentMove;
                         }
                     }
                 }
             }
-            if (nextMove == -1) {
-                nextMove = new ArrayList<>(circle.getFreePositions().keySet()).get(0);
-            }
+
 
         } else {
             if (TRACE) System.out.printf("MAX: depth %d%n", depth);
             int heuristik = 0;
-            for (Map.Entry<Integer, Integer> currentMove : possibleMoves.entrySet()) {
+            for (int currentMove : possibleMoves) {
                 Circle currentCircle = circle.copy();
-                int positionForCurrrentMove = currentMove.getKey();
+                int positionForCurrrentMove = currentMove;
                 if ((currentCircle.getPrev(positionForCurrrentMove) != null) && (currentCircle.getNext(positionForCurrrentMove) != null)) {
                     heuristik++;
                     if (heuristik > maxValue) {
@@ -166,7 +160,7 @@ public class AlphaBeta {
 //                            break;
 //                        }
                         if (startDepth == depth) {
-                            nextMove = currentMove.getKey();
+                            nextMove = currentMove;
                         }
                     }
                 }
@@ -174,16 +168,19 @@ public class AlphaBeta {
 
 
         }
+        if (nextMove == -1) {
+            nextMove = new ArrayList<>(circle.getFreePositions()).get(0);
+        }
         if (TRACE || TRACEX) System.out.printf("MAX: maxValueToReturn = %d%n", maxValue);
         return maxValue;
     }
 
-    private int getMaxValue(Map<Integer, Integer> map) {
-        return Collections.max(map.values());
+    private int getMaxValue(List<Integer> list) {
+        return Collections.max(list);
     }
 
-    private int getMinValue(Map<Integer, Integer> map) {
-        return Collections.min(map.values());
+    private int getMinValue(List<Integer> list) {
+        return Collections.min(list);
     }
 
     public int getMarkPositionForNextMove() {
